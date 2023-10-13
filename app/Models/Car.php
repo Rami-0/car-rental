@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Car extends Model
 {
     protected $fillable = [
-        'make',
+        'brand',
         'model',
         'year',
         'license_plate',
-        'price_per_day',
+        'price',
         'color',         // New field for car color
         'photo',         // New field for car photo path
     ];

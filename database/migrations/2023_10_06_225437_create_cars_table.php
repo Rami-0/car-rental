@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('brand'); // toyota, ford, etc
             $table->string('model');    // corolla, mustang, etc
             $table->integer('year');    // 2010, 2015, etc
-            $table->decimal('price', 8, 2);     // 8 digits, 2 decimals
+            $table->decimal('price')->default(0.0); // price per day
             $table->string('color');    // color of the car
             $table->string('photo')->nullable(); // Add the 'photo' field (nullable)
             $table->string('license_plate');    // License plate number
