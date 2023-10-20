@@ -11,6 +11,7 @@ class Reservation extends Model
         'car_id',         // Car being reserved
         'pickup_date',    // Date and time of car pickup
         'return_date',    // Date and time of car return
+        'status',         // Status of the reservation
         // Additional fields for reservation details
     ];
 

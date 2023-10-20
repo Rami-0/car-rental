@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('car_id');  // Car being reserved
             $table->timestamp('pickup_date');
             $table->timestamp('return_date')->nullable();
+            $table->string('status')->default('Available');
             // Additional fields for reservation details
 
             // Define foreign key constraints

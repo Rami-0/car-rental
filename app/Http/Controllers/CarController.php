@@ -13,6 +13,7 @@ class CarController extends Controller
             'cars' => Car::all()
         ]);
     }
+
     public function create()
     {
         return view('cars.create');
@@ -45,17 +46,31 @@ class CarController extends Controller
 
     public function show(Car $car)
     {
-        // Display a specific car
+        return view('cars.show', compact('car'));
     }
 
     public function edit(Car $car)
     {
-        // Show the form for editing a car
+        return view('cars.edit', compact('car'));
     }
 
     public function update(Request $request, Car $car)
     {
         // Update the specified car in the database
+        $rules = [
+            'brand' => 'required',
+            'model' => 'required',
+            'year' => 'required|integer',
+            'price' => 'required|numeric',
+            'color' => 'required',
+            'license_plate' => 'required',
+        ];
+
+        $request->validate($rules);
+
+        $car->update($request->all());
+        // You can return a response or redirect to another route here
+        return redirect()->route('cars.index')->with('success', 'Car updated successfully');
     }
 
     public function destroy(Car $car)
