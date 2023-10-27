@@ -5,8 +5,10 @@
 
 <body class="font-sans antialiased">
 <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-    @if(Auth::user())
-    @include('layouts.navigation')
+    @if(Auth::user()->hasRole(env('APP_ADMIN_ROLE')))
+        @include('layouts.navigation-admin')
+    @elseif(Auth::user()->hasRole(env('APP_USER_ROLE')))
+        @include('layouts.navigation');
     @endif
     <!-- Page Heading -->
     @if (isset($header))

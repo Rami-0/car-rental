@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -14,6 +16,13 @@ class ReservationController extends Controller
         return view('reservations.index', compact('reservations'));
     }
 
+    public function show(Reservation $reservation)
+    {
+        return view('reservations.show', compact('reservation'));
+    }
+
+
+
     public function create()
     {
         // Check the user's role
@@ -23,8 +32,12 @@ class ReservationController extends Controller
 //            return view('reservations.admin_create');
 //        } else {
         // Logic for regular user reservation form
-        return view('reservations.create');
+//        return view('reservations.create');
 //        }
+
+        $users = User::all();
+        $cars = Car::all(); //where('status', 'Available')->get(); // Assuming you have a 'status' column in the Car model to track availability.
+        return view('reservations.create', compact('users', 'cars'));
     }
 
     public function createForCar(Car $car)
@@ -36,8 +49,27 @@ class ReservationController extends Controller
 
     public function store(Request $request)
     {
-        // Handle the creation of a new reservation
-        // Validate and store the reservation data in the database
+        // Validate the reservation data
+        $request->validate([
+            'user_id' => 'required|exists:users,id', // Check if the selected user exists
+            'car_id' => 'required|exists:cars,id',   // Check if the selected car exists
+            'pickup_date' => 'required|date',
+            // You can add additional validation rules here for other fields
+        ]);
+
+        // Assuming 'return_date' and other reservation details are submitted in the form, you can include them in the validation rules.
+
+        // Create a new reservation
+        Reservation::create([
+            'user_id' => $request->user_id,
+            'car_id' => $request->car_id,
+            'pickup_date' => $request->pickup_date,
+            'status' => 'Pending', // Assuming the default status is 'Pending'
+            // Include other reservation details here
+        ]);
+
+        // You can add a success message to be displayed to the user
+        return redirect()->route('reservations.index')->with('success', 'Reservation created successfully.');
     }
 
     public function changeStatus(Reservation $reservation)
