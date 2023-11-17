@@ -36,11 +36,12 @@ class RegisteredUserController extends Controller
             'license_id_number' => ['required', 'string', 'max:255'], // Add license_id_number validation
             'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-//            'personal_photo' => ['', 'image', 'max:2048'], // Add personal_photo validation
+            'personal_photo' => ['', 'image', 'max:2048'], // Add personal_photo validation
         ]);
 
-        // Store the personal photo and get the file path
-//        $personalPhotoPath = $this->storePersonalPhoto($request->file('personal_photo'));
+        //Store the personal photo and get the file path
+        $personalPhotoPath = $this->storePersonalPhoto($request->file('personal_photo'));
+
 
         $user = User::create([
             'name' => $request->name,
@@ -48,7 +49,8 @@ class RegisteredUserController extends Controller
             'license_id_number' => $request->license_id_number, // Add license_id_number field
             'email' => $request->email,
             'password' => Hash::make($request->password),
-//            'personal_photo' => $personalPhotoPath, // Store the file path
+            'role' => "user",
+            'personal_photo' => $personalPhotoPath, // Store the file path
         ]);
 
         event(new Registered($user));
@@ -58,12 +60,15 @@ class RegisteredUserController extends Controller
         return redirect(RouteServiceProvider::HOME);
     }
 
-//    protected function storePersonalPhoto($photo)
-//    {
-//        // Customize this method to store the personal photo and return the file path.
-//        // Example:
-//        $path = $photo->store('personal-photos', 'public');
-//        return $path;
-//    }
+    protected function storePersonalPhoto($photo)
+    {
+        // Customize this method to store the personal photo and return the file path.
+        // Example:
+        if(!$photo) {
+            return null;
+        }
+        $path = $photo->store('personal-photos', 'public');
+        return $path;
+    }
 
 }

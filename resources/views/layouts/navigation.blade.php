@@ -17,6 +17,12 @@
                     </x-nav-link>
                 </div>
             </div>
+            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <x-nav-link :href=" route('cars.index') " :active="request()->routeIs('cars.index')">
+                    {{ __('Cars') }}
+                </x-nav-link>
+            </div>
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
