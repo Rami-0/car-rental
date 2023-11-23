@@ -26,7 +26,6 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified', 'role:0101010101010101'])->group(function () {
-//    Route::resource('/cars', CarController::class);
     // cars
     Route::get('/admin/cars', [CarController::class, 'index'])->name('cars.index');
     Route::get('/admin/cars/create', [CarController::class, 'create'])->name('cars.create');
@@ -37,7 +36,7 @@ Route::middleware(['auth', 'verified', 'role:0101010101010101'])->group(function
     Route::delete('/admin/cars/{car}', [CarController::class, 'destroy'])->name('cars.destroy');
 
     //     reservations
-//    Route::resource('/reservations', ReservationController::class);
+    Route::resource('/reservations', ReservationController::class);
     // Listing Reservations (Index)
     // reservations
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('reservations.index');
@@ -46,40 +45,13 @@ Route::middleware(['auth', 'verified', 'role:0101010101010101'])->group(function
     Route::get('/admin/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
     // Add more admin-specific routes here
 });
-Route::middleware(['auth', 'verified', 'role:user'])->group(function () {
-    // cars
-    Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
-    Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
 
-    // reservations
-    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
-});
-
-
+//user routes
 // cars
-//Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
-//Route::get('/cars/create', [CarController::class, 'create'])->name('cars.create');
-//Route::post('/cars/create', [CarController::class, 'store'])->name('cars.store');
-//Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
-//Route::get('/cars/{car}/edit', [CarController::class, 'edit'])->name('cars.edit');
-//Route::put('/cars/{car}/edit', [CarController::class, 'update'])->name('cars.update');
-//Route::delete('/cars/{car}', [CarController::class, 'destroy'])->name('cars.destroy');
-
-
-//Route::resource('/cars', CarController::class);
-//Route::get('/cars/{car}', [CarController::class, 'create'])->name('cars.car');
-//Route::get('/cars/{car}/edit', [CarController::class, 'create'])->name('cars.edit');
-//Route::get('/cars/{car}/reserve', [ReservationController::class, 'create'])->name('cars.reserve');
-
-
+Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
+Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
 // reservations
-//Route::resource('/reservations', ReservationController::class);
-// Listing Reservations (Index)
-//Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
-//Route::get('/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
-//Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
-//Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
-
+Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
 
 // authentication
 Route::get('/dashboard', function () {
