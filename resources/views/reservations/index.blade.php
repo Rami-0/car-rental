@@ -9,16 +9,16 @@
 
         <br/>
 
-        <h1>Reservations</h1>
+        <h1 class="text-3xl pb-10"><strong>Reservations</strong></h1>
 
         <table>
             <thead>
             <tr>
-                <th>User</th>
-                <th>Car</th>
-                <th>Pickup Date</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th class="text-left">User</th>
+                <th class="text-left">Car</th>
+                <th class="text-left">Pickup Date</th>
+                <th class="text-left">Status</th>
+                <th class="text-left">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -35,5 +35,11 @@
             @endforeach
             </tbody>
         </table>
+            <a href="{{ route('reservations.create') }}">
+                <x-secondary-button class="mt-4">
+                    Reserve
+                </x-secondary-button>
+            </a>
+
     </x-container-layout>
 </x-app-layout>

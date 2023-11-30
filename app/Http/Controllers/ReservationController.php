@@ -6,6 +6,8 @@ use App\Models\Car;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class ReservationController extends Controller
 {
@@ -25,18 +27,8 @@ class ReservationController extends Controller
 
     public function create()
     {
-        // Check the user's role
-//        if (auth()->user()->is_admin) {
-        // Logic for admin reservation form
-        // You can show a different form or redirect to an admin-specific reservation page
-//            return view('reservations.admin_create');
-//        } else {
-        // Logic for regular user reservation form
-//        return view('reservations.create');
-//        }
-
         $users = User::all();
-        $cars = Car::all(); //where('status', 'Available')->get(); // Assuming you have a 'status' column in the Car model to track availability.
+        $cars = Car::where('status', '=', 'Available')->get(); // Assuming you have a 'status' column in the Car model to track availability.
         return view('reservations.create', compact('users', 'cars'));
     }
 
@@ -50,31 +42,57 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         // Validate the reservation data
-        $request->validate([
-            'user_id' => 'required|exists:users,id', // Check if the selected user exists
-            'car_id' => 'required|exists:cars,id',   // Check if the selected car exists
+//        $request->validate([
+//            'user_id' => 'required|exists:users,id',
+//            'car_id' => 'required|exists:cars,id',
+//            'pickup_date' => 'required|date',
+//            'return_date' => 'required|date|after:pickup_date',
+//            // Add any additional validation rules for other fields here
+//        ]);
+
+        // Validate the reservation data
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'car_id' => 'required|exists:cars,id',
             'pickup_date' => 'required|date',
-            // You can add additional validation rules here for other fields
+            'return_date' => 'required|date|after:pickup_date',
+            // Add any additional validation rules for other fields here
         ]);
 
-        // Assuming 'return_date' and other reservation details are submitted in the form, you can include them in the validation rules.
+        // Check if the validation fails
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Reservation could not be created. Please enter a valid data.');
+        }
 
         // Create a new reservation
-        Reservation::create([
+        $reservation = Reservation::create([
             'user_id' => $request->user_id,
             'car_id' => $request->car_id,
             'pickup_date' => $request->pickup_date,
+            'return_date' => $request->return_date,
             'status' => 'Pending', // Assuming the default status is 'Pending'
             // Include other reservation details here
         ]);
 
-        // You can add a success message to be displayed to the user
-        return redirect()->route('reservations.index')->with('success', 'Reservation created successfully.');
+//        Car::changeStatus($request->car_id, 'Reserved');
+
+        // Redirect the user to the reservation details page with the reservation ID
+        return redirect()->route('reservations.show', $reservation->id)->with('success', 'Reservation created successfully.');
     }
 
     public function changeStatus(Reservation $reservation)
     {
         // Change the status of a reservation (e.g., from "Available" to "Reserved")
     }
+
+    public function reserveCar(Car $car)
+    {
+        // You can pass additional data to the reservation form if needed
+        return view('reservations.reserveCar', compact('car'));
+    }
+
 }
 

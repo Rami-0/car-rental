@@ -4,6 +4,7 @@ use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CarController;
+$adminRole = env('APP_ADMIN_ROLE');
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth', 'verified', 'role:0101010101010101'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:' . $adminRole])->group(function () {
     // cars
     Route::get('/admin/cars', [CarController::class, 'index'])->name('cars.index');
     Route::get('/admin/cars/create', [CarController::class, 'create'])->name('cars.create');
@@ -50,6 +51,9 @@ Route::middleware(['auth', 'verified', 'role:0101010101010101'])->group(function
 // cars
 Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
 Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
+Route::get('/cars/{car}/reserve', [ReservationController::class, 'reserveCar'])->name('cars.reserveCar');
+Route::post('/cars/{car}/reserve', [ReservationController::class, 'store'])->name('cars.reserveCar');
+
 // reservations
 Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
 

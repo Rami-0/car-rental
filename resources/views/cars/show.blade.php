@@ -15,6 +15,11 @@
                     Edit
                 </x-secondary-button>
             </a>
+            <a href="{{ route('cars.reserveCar', ['car' => $car]) }}">
+                <x-secondary-button class="mt-4">
+                    Reserve This Car
+                </x-secondary-button>
+            </a>
 
         </div>
     </x-container-layout>
