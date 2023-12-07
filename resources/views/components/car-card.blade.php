@@ -14,10 +14,12 @@
     <!-- Additional information or elements can be added here as needed -->
 
     <!-- Delete button on the right side -->
-    <div class="flex mt-auto">
-        <x-danger-button href="{{ $deleteRoute }}" class=" ml-auto"
-                         onclick="event.preventDefault(); document.getElementById('delete-form-{{ $car->id }}').submit();">
-            Delete
-        </x-danger-button>
-    </div>
+    @if(Auth::user()->hasRole(env('APP_ADMIN_ROLE')))
+        <div class="flex mt-auto">
+            <x-danger-button href="{{ $deleteRoute }}" class=" ml-auto"
+                             onclick="event.preventDefault(); document.getElementById('delete-form-{{ $car->id }}').submit();">
+                Delete
+            </x-danger-button>
+        </div>
+    @endif
 </div>

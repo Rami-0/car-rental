@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified', 'role:' . $adminRole])->group(function ()
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::get('/admin/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
     Route::post('/admin/reservations', [ReservationController::class, 'store'])->name('reservations.store');
-    Route::get('/admin/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
+    Route::put('/admin/reservations/{reservation}/approve', [ReservationController::class, 'approve'])->name('reservations.approve');
     // Add more admin-specific routes here
 });
 
@@ -51,16 +51,26 @@ Route::middleware(['auth', 'verified', 'role:' . $adminRole])->group(function ()
 // cars
 Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
 Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
-Route::get('/cars/{car}/reserve', [ReservationController::class, 'reserveCar'])->name('cars.reserveCar');
-Route::post('/cars/{car}/reserve', [ReservationController::class, 'store'])->name('cars.reserveCar');
+Route::get('/cars/{car}/reserve', [ReservationController::class, 'reserveCar'])->name('reservations.reserveCar');
+Route::post('/cars/{car}/reserve', [ReservationController::class, 'store'])->name('reservations.reserveCar.store');
 
 // reservations
 Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
+Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
 
 // authentication
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth'])->group(function () {
+    // Your other routes here
+
+    // Add this route for dashboard
+    Route::get('/dashboard', [ReservationController::class, 'myReservations'])->name('dashboard');
+});
+
 
 // profile
 Route::middleware('auth')->group(function () {

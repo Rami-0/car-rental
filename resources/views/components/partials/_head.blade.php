@@ -12,9 +12,9 @@
 
     @stack('stylesheet')
 
-    {{-- FIXME:--}}
-{{--    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">--}}
-    {{--    // this is added only because some of the components styles like grids isn't working--}}
+    {{--     FIXME:--}}
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    {{--     this is added only because some of the components styles like grids isn't working--}}
 
 
     <!-- Fonts -->

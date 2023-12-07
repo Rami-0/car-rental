@@ -41,14 +41,6 @@ class ReservationController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the reservation data
-//        $request->validate([
-//            'user_id' => 'required|exists:users,id',
-//            'car_id' => 'required|exists:cars,id',
-//            'pickup_date' => 'required|date',
-//            'return_date' => 'required|date|after:pickup_date',
-//            // Add any additional validation rules for other fields here
-//        ]);
 
         // Validate the reservation data
         $validator = Validator::make($request->all(), [
@@ -77,7 +69,7 @@ class ReservationController extends Controller
             // Include other reservation details here
         ]);
 
-//        Car::changeStatus($request->car_id, 'Reserved');
+        Car::changeStatus($request->car_id, 'Reserved');
 
         // Redirect the user to the reservation details page with the reservation ID
         return redirect()->route('reservations.show', $reservation->id)->with('success', 'Reservation created successfully.');
@@ -86,12 +78,36 @@ class ReservationController extends Controller
     public function changeStatus(Reservation $reservation)
     {
         // Change the status of a reservation (e.g., from "Available" to "Reserved")
+        $reservation->update(['status' => 'Reserved']);
     }
 
     public function reserveCar(Car $car)
     {
         // You can pass additional data to the reservation form if needed
         return view('reservations.reserveCar', compact('car'));
+    }
+
+    public function destroy(Reservation $reservation)
+    {
+        // Delete the reservation
+        Car::changeStatus($reservation->car_id, 'Available');
+        $reservation->delete();
+        return redirect()->route('reservations.index')->with('success', 'Reservation deleted successfully.');
+    }
+
+    public function approve(Reservation $reservation)
+    {
+        // Approve the reservation
+        $reservation->update(['status' => 'Approved']);
+        return redirect()->route('reservations.index')->with('success', 'Reservation approved successfully.');
+    }
+
+    public function myReservations()
+    {
+        $currentUser = auth()->user();
+        $reservations = Reservation::where('user_id', $currentUser->id)->get();
+
+        return view('dashboard', compact('reservations'));
     }
 
 }

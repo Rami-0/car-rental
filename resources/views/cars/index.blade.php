@@ -32,17 +32,23 @@
 
                 </div>
 
-                <form id="delete-form-{{ $car->id }}" action="{{ route('cars.destroy', $car) }}"
-                      method="POST" style="display: none;">
-                    @csrf
-                    @method('DELETE')
-                </form>
+                @if(Auth::user()->hasRole(env('APP_ADMIN_ROLE')))
+                    <form id="delete-form-{{ $car->id }}" action="{{ route('cars.destroy', $car) }}"
+                          method="POST" style="display: none;">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                @endif
             @endforeach
         </div>
-        <a class="ml-auto" href="{{ route('cars.create') }}">
-            <x-primary-button class="mt-4">
-                Add a Car
-            </x-primary-button>
-        </a>
+        @if(Auth::user()->hasRole(env('APP_ADMIN_ROLE')))
+
+            <a class="ml-auto" href="{{ route('cars.create') }}">
+                <x-primary-button class="mt-4">
+                    Add a Car
+                </x-primary-button>
+            </a>
+        @endif
+
     </x-container-layout>
 </x-app-layout>

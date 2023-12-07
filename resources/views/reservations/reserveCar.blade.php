@@ -19,7 +19,7 @@
 
         {{--reservation form--}}
         <div>
-            <form action="{{ route('reservations.store') }}" method="post">
+            <form action="{{ route('reservations.reserveCar.store', ['car' => $car]) }}" method="post">
                 @csrf
 
                 <div class="mb-4">

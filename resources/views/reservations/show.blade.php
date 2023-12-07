@@ -20,7 +20,26 @@
         <p><strong>Pickup Date:</strong> {{ $reservation->pickup_date }}</p>
         <p><strong>Return Date:</strong> {{ $reservation->return_date }}</p>
         <p><strong>Status:</strong> {{ $reservation->status }}</p>
-        <!-- Add more reservation details here --   >
+
+
+        <form action="{{ route('reservations.destroy', $reservation) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <x-secondary-button class="mt-4" type="submit">
+                Delete
+            </x-secondary-button>
+        </form>
+
+        @if(Auth::user()->hasRole(env('APP_ADMIN_ROLE')))
+            <form action="{{ route('reservations.approve', $reservation) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <x-secondary-button class="mt-4" type="submit">
+                    Approve
+                </x-secondary-button>
+            </form>
+        @endif
+
 
     </x-container-layout>
 

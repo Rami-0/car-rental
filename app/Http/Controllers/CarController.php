@@ -37,6 +37,7 @@ class CarController extends Controller
             'price' => $request->price,
             'color' => $request->color,
             'license_plate' => $request->license_plate,
+            'status' => 'Available',
         ]);
 
         return redirect()->route('cars.index')->with('success', 'Car added successfully.');
