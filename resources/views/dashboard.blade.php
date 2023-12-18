@@ -11,9 +11,7 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     {{ __("You're logged in!") }}
                 </div>
-                @if(Auth::user()->hasRole(env('APP_ADMIN_ROLE')))
-{{--                    @include('reservations.index', request()->routeIs('admin/dashboard'));--}}
-                @elseif(Auth::user()->hasRole(env('APP_USER_ROLE')))
+                @if(Auth::user()->hasRole(env('APP_USER_ROLE')))
                     @include('reservations.my-reservations', ['reservations' => $reservations])
                 @endif
             </div>

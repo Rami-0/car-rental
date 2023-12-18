@@ -55,6 +55,4 @@ class User extends Authenticatable
         return strpos($this->role, $role) !== false;
     }
 
-
-
 }

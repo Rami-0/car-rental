@@ -40,6 +40,12 @@
             </form>
         @endif
 
+        @if(Auth::user()->hasRole(env('APP_USER_ROLE')))
+                <x-secondary-button class="mt-4 w-40" >
+                    <a class="z-10 w-full" href="{{ route('reservations.checkout', $reservation->id) }}">Checkout Now</a>
+                </x-secondary-button>
+        @endif
+
 
     </x-container-layout>
 

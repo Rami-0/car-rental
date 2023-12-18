@@ -19,6 +19,7 @@ class CarController extends Controller
         return view('cars.create');
     }
 
+
     public function store(Request $request)
     {
         $request->validate([
@@ -28,8 +29,19 @@ class CarController extends Controller
             'price' => 'required|numeric',
             'color' => 'required',
             'license_plate' => 'required',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        // Get the uploaded file
+        $photoFile = $request->file('photo');
+
+        // Generate a unique name for the file
+        $photoFileName = time() . '_' . $photoFile->getClientOriginalName();
+
+        // Store the file in the 'public/cars' directory
+        $photoPath = $photoFile->storeAs('cars', $photoFileName, 'public');
+
+        // Create a new Car instance and save it to the database
         Car::create([
             'brand' => $request->brand,
             'model' => $request->model,
@@ -38,11 +50,10 @@ class CarController extends Controller
             'color' => $request->color,
             'license_plate' => $request->license_plate,
             'status' => 'Available',
+            'photo' => $photoPath,
         ]);
 
         return redirect()->route('cars.index')->with('success', 'Car added successfully.');
-
-        // Store a newly created car in the database
     }
 
     public function show(Car $car)

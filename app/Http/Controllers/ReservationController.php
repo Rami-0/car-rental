@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use App\Models\Reservation;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Vaidator;
 
 
 class ReservationController extends Controller
@@ -22,7 +23,6 @@ class ReservationController extends Controller
     {
         return view('reservations.show', compact('reservation'));
     }
-
 
 
     public function create()
@@ -101,6 +101,37 @@ class ReservationController extends Controller
         $reservation->update(['status' => 'Approved']);
         return redirect()->route('reservations.index')->with('success', 'Reservation approved successfully.');
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function checkout($reservationId)
+    {
+        $reservation = Reservation::where('id', '=', $reservationId)->first();
+
+        if (!$reservation) {
+            // Handle the case where the reservation is not found
+            abort(404);
+        }
+
+        $car = Car::where('id', '=', $reservation->car_id)->first();
+
+        if (!$car) {
+            // Handle the case where the car is not found
+            abort(404);
+        }
+
+        $pickupDate = new DateTime($reservation->pickup_date);
+        $returnDate = new DateTime($reservation->return_date);
+        $daysDifference = $returnDate->diff($pickupDate)->days;
+
+        $amount = $car->price * $daysDifference;
+
+        $amount = number_format($amount, 2, '.', '');
+
+        return view("reservations.checkout", compact('reservation', 'car', 'amount'));
+    }
+
 
     public function myReservations()
     {

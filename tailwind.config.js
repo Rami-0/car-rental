@@ -7,6 +7,7 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        "./resources/views/**/*.",
     ],
 
     theme: {
@@ -21,10 +22,11 @@ export default {
                 100: '#FE8400',
                 200: '#141414',
                 300: '#FFE4C6',
+                400: '#FFF',
             },
             // ...
         },
     },
-    darkMode: 'class',
+    darkMode: false,
     plugins: [forms],
 };

@@ -8,7 +8,7 @@
     @if(Auth::user()->hasRole(env('APP_ADMIN_ROLE')))
         @include('layouts.navigation-admin')
     @elseif(Auth::user()->hasRole(env('APP_USER_ROLE')))
-        @include('layouts.navigation');
+        @include('layouts.navigation')
     @endif
     <!-- Page Heading -->
     @if (isset($header))

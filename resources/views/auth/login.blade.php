@@ -39,8 +39,9 @@
                 </a>
             @endif
 
-            <x-primary-button class="ml-3">
-                {{ __('Log in') }}
+            <x-primary-button  class="ml-3 text-black ">
+                    <h1 style="color: black" class="hover:text-color-100">         {{ __('Log in') }}
+                    </h1>
             </x-primary-button>
         </div>
     </form>

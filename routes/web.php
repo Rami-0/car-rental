@@ -4,6 +4,9 @@ use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\PaymentController;
+use Illuminate\Http\Request;
+
 $adminRole = env('APP_ADMIN_ROLE');
 
 /*
@@ -43,20 +46,35 @@ Route::middleware(['auth', 'verified', 'role:' . $adminRole])->group(function ()
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::get('/admin/reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
     Route::post('/admin/reservations', [ReservationController::class, 'store'])->name('reservations.store');
-    Route::put('/admin/reservations/{reservation}/approve', [ReservationController::class, 'approve'])->name('reservations.approve');
+    Route::put('/admin/reservations/{reservation}/approve', [PaymentController::class, 'approve'])->name('reservations.approve');
     // Add more admin-specific routes here
 });
 
 //user routes
 // cars
-Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
-Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
-Route::get('/cars/{car}/reserve', [ReservationController::class, 'reserveCar'])->name('reservations.reserveCar');
-Route::post('/cars/{car}/reserve', [ReservationController::class, 'store'])->name('reservations.reserveCar.store');
+//Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
+//Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
+//Route::get('/cars/{car}/reserve', [ReservationController::class, 'reserveCar'])->name('reservations.reserveCar');
+//Route::post('/cars/{car}/reserve', [ReservationController::class, 'store'])->name('reservations.reserveCar.store');
+//
+//// reservations
+//Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
+//Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 
-// reservations
-Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
-Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cars', [CarController::class, 'index'])->name('cars.index');
+    Route::get('/cars/{car}', [CarController::class, 'show'])->name('cars.show');
+    Route::get('/cars/{car}/reserve', [ReservationController::class, 'reserveCar'])->name('reservations.reserveCar');
+    Route::post('/cars/{car}/reserve', [ReservationController::class, 'store'])->name('reservations.reserveCar.store');
+
+    Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
+    Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
+    Route::get('/checkout/{reservation}', [ReservationController::class, 'checkout'])->name('reservations.checkout');
+    Route::post('/process-payment', [PaymentController::class, 'processPayment']);
+    Route::get('/payment/success', [PaymentController::class, 'handlePaymentSuccess'])->name('payment.success'); ;
+
+});
 
 
 // authentication
@@ -65,9 +83,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    // Your other routes here
-
-    // Add this route for dashboard
     Route::get('/dashboard', [ReservationController::class, 'myReservations'])->name('dashboard');
 });
 
